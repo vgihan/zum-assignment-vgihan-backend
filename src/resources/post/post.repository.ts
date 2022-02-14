@@ -1,6 +1,7 @@
 import { Post } from "../../types/post";
 import { getCustomTime } from "../../utils/getCustomTime";
 import { GetPostDto } from "./dto/get-post.dto";
+import { PutPostDto } from "./dto/put-post.dto";
 import { SetPostDto } from "./dto/set-post.dto";
 
 export const postRepository = (() => {
@@ -9,10 +10,10 @@ export const postRepository = (() => {
   const find = (getPostDto: GetPostDto) => {
     const { id, title, content, writer } = getPostDto;
     return posts.filter((post) => {
-      if (id && id.toString().includes(post.id.toString())) return false;
-      if (title && title.includes(post.title)) return false;
-      if (content && content.includes(post.content)) return false;
-      if (writer && writer.includes(post.writer)) return false;
+      if (id && id != post.id) return false;
+      if (title && !title.includes(post.title)) return false;
+      if (content && !content.includes(post.content)) return false;
+      if (writer && !writer.includes(post.writer)) return false;
       return true;
     });
   };
@@ -27,5 +28,17 @@ export const postRepository = (() => {
     posts.push(newPost);
     return newPost;
   };
-  return { find, create };
+  const modify = (putPostDto: PutPostDto) => {
+    const { id, title, content, writer } = putPostDto;
+    const targetIndex = posts.findIndex((post) => post.id === id);
+    posts.splice(targetIndex, 1, {
+      id,
+      title,
+      content,
+      writer,
+      date: getCustomTime(new Date()),
+    });
+    return posts;
+  };
+  return { find, create, modify };
 })();

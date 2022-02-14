@@ -7,5 +7,6 @@ const controller = new PostController(new PostService());
 
 postRouter.get("", controller.getPost);
 postRouter.post("", controller.setPost);
+postRouter.put("", controller.putPost);
 
 export default postRouter;
