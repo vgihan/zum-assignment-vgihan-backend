@@ -4,41 +4,40 @@ import { GetPostDto } from "./dto/get-post.dto";
 import { PutPostDto } from "./dto/put-post.dto";
 import { SetPostDto } from "./dto/set-post.dto";
 
-export const postRepository = (() => {
-  const posts: Post[] = [];
-  let idx = 0;
-  const find = (getPostDto: GetPostDto) => {
+export class PostRepository {
+  posts: Post[];
+  idx: number;
+  constructor() {
+    this.posts = [];
+    this.idx = 0;
+  }
+  find(getPostDto: GetPostDto) {
     const { id, title, content, writer } = getPostDto;
-    return posts.filter((post) => {
+    return this.posts.filter((post) => {
       if (id && id != post.id) return false;
       if (title && !title.includes(post.title)) return false;
       if (content && !content.includes(post.content)) return false;
       if (writer && !writer.includes(post.writer)) return false;
       return true;
     });
-  };
-  const create = (setPostDto: SetPostDto) => {
+  }
+  create(setPostDto: SetPostDto) {
     const newPost = {
-      id: idx++,
-      title: setPostDto.title,
-      content: setPostDto.content,
-      writer: setPostDto.writer,
+      ...setPostDto,
+      id: this.idx++,
       date: getCustomTime(new Date()),
     };
-    posts.push(newPost);
+    this.posts.push(newPost);
     return newPost;
-  };
-  const modify = (putPostDto: PutPostDto) => {
-    const { id, title, content, writer } = putPostDto;
-    const targetIndex = posts.findIndex((post) => post.id === id);
-    posts.splice(targetIndex, 1, {
-      id,
-      title,
-      content,
-      writer,
+  }
+  modify(putPostDto: PutPostDto) {
+    const targetIndex = this.posts.findIndex(
+      (post) => post.id === putPostDto.id
+    );
+    this.posts.splice(targetIndex, 1, {
+      ...putPostDto,
       date: getCustomTime(new Date()),
     });
-    return posts;
-  };
-  return { find, create, modify };
-})();
+    return this.posts;
+  }
+}

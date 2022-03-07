@@ -1,16 +1,18 @@
 import { GetPostDto } from "./dto/get-post.dto";
 import { PutPostDto } from "./dto/put-post.dto";
 import { SetPostDto } from "./dto/set-post.dto";
-import { postRepository } from "./post.repository";
+import { PostRepository } from "./post.repository";
 
 export class PostService {
+  constructor(private postRepository: PostRepository) {}
+
   getPost(getPostDto: GetPostDto) {
-    return postRepository.find(getPostDto);
+    return this.postRepository.find(getPostDto);
   }
   setPost(setPostDto: SetPostDto) {
-    return postRepository.create(setPostDto);
+    return this.postRepository.create(setPostDto);
   }
   putPost(putPostDto: PutPostDto) {
-    return postRepository.modify(putPostDto);
+    return this.postRepository.modify(putPostDto);
   }
 }

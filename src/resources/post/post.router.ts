@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { PostController } from "./post.controller";
-import { PostService } from "./post.service";
+import { postController } from "../../factory";
 
 const postRouter = Router();
-const controller = new PostController(new PostService());
 
-postRouter.get("", controller.getPost);
-postRouter.post("", controller.setPost);
-postRouter.put("", controller.putPost);
+postRouter.get("", postController.getPost);
+postRouter.post("", postController.setPost);
+postRouter.put("", postController.putPost);
 
 export default postRouter;
